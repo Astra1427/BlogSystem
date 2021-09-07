@@ -1,0 +1,126 @@
+﻿@model IEnumerable<BlogSystem.DTO.ArticleDto>
+
+@{
+    ViewBag.Title = "ListArticle";
+}
+
+<h2>ListArticle</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateArticle")
+</p>
+<table class="table">
+    <thead>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoodCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BadCount)
+            </th>
+            <th>
+                分类
+            </th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BadCount)
+                </td>
+                <td>
+                    <ul id="listCategories">
+                        @foreach (var categoryName in item.CategoryNames)
+                        {
+                            <li>@categoryName </li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditArticle", new { articleId = item.ID }) |
+                    @Html.ActionLink("Details", "DetailArticle", new { articleId = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { articleId = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <!-- 分页页码 -->
+        <tr>
+            <td colspan="7">
+                <span>总页码：@ViewBag.PageCount</span>
+                <ul id="listCategories">
+                    @{
+                        //left page number
+                        //Center index : 4
+                        int leftStartIndex = (ViewBag.PageIndex + 1) >= 4 ? ViewBag.PageIndex - 2 : 1;
+                        int rightLimit = ViewBag.PageCount - ViewBag.PageIndex -1;
+                        if (rightLimit < 3)
+                        {
+                            //Arrival Right Limit
+                            leftStartIndex -= 3 - rightLimit;
+                        }
+
+                        for (int i = leftStartIndex < 0 ? 0 : leftStartIndex; i < ViewBag.PageIndex + 1; i++)
+                        {
+                            <li><a href="/article/ListArticle?pageIndex=@(i-1)">@i</a></li>
+                        }
+
+                    }
+                    <li><a href="/article/ListArticle?pageIndex=@ViewBag.PageIndex" style="color:red;">@(ViewBag.PageIndex + 1)</a></li>
+
+                    @{
+                        //right page number
+                        int leftIndexCount = (ViewBag.PageIndex + 1) >= 4 ? 3 : ViewBag.PageIndex;
+                        int rightIndexCount = 7 - 1 - leftIndexCount;
+                        rightIndexCount = rightIndexCount + ViewBag.PageIndex+1 > ViewBag.PageCount ? ViewBag.PageCount-1 : rightIndexCount + ViewBag.PageIndex;
+                        @*<span>@rightIndexCount</span>*@
+                        for (int i = ViewBag.PageIndex+1; i <= rightIndexCount; i++)
+                        {
+                            <li><a href="/article/ListArticle?pageIndex=@(i)">@(i+1)</a></li>
+                        }
+
+                    }
+                </ul>
+
+            </td>
+        </tr>
+
+    </tfoot>
+</table>
+
+@section headers{
+    <style>
+        #listCategories>li{
+            float:left;
+            list-style:none;
+        }
+        
+    </style>
+    }

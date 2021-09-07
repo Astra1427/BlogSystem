@@ -15,6 +15,10 @@ namespace BlogSystem.DAL
 
         }
 
-
+        public IQueryable<Article> GetArticleByPage(Guid userId, int pageIndex, int pageSize,bool asc = true)
+        {
+            var aticles = this.GetAllOrderAsync(asc).Where(a=>a.UserId == userId) ;
+            return aticles.Skip(pageIndex*pageSize).Take(pageSize);
+        }
     }
 }

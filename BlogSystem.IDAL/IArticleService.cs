@@ -9,6 +9,6 @@ namespace BlogSystem.IDAL
 {
     public interface IArticleService : IBaseService<Models.Article>
     {
-        
+        IQueryable<Models.Article> GetArticleByPage(Guid userId,int pageIndex,int pageSize, bool asc = true);
     }
 }

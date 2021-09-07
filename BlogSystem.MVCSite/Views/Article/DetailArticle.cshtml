@@ -1,0 +1,104 @@
+﻿@model BlogSystem.DTO.ArticleDto
+
+@{
+    ViewBag.Title = "DetailArticle";
+}
+
+<h2>DetailArticle</h2>
+
+<div>
+    <h4>ArticleDto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GoodCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BadCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BadCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserPortraitPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserPortraitPath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserEmail)
+        </dd>
+
+        <dt>
+            分类
+        </dt>
+
+        @foreach (var item in ViewBag.CategoryNames)
+        {
+            <dd class="listCategories">@item</dd>
+        }
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditArticle", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "ListArticle")
+</p>
+
+@section headers{
+    <style>
+        .listCategories{
+            list-style:none;
+            float:left;
+            text-align:left;
+            margin:5px 0 0 0 !important;
+            padding:0;
+        }
+    </style>
+
+}
