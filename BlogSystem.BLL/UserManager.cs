@@ -15,8 +15,13 @@ namespace BlogSystem.BLL
 
         public async Task RegisterAsync(string email, string password)
         {
+
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
+                if (await userSvc.FindUserByEmailAsync(email))
+                {
+                    throw new ArgumentException("Email已被注册");
+                }
                 await userSvc.CreateAsync(new User 
                 { 
                     Email = email,
@@ -30,7 +35,7 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                var user = await userSvc.GetAllAsync().FirstOrDefaultAsync(a=>a.Email == email);
+                var user = await userSvc.GetAll().FirstOrDefaultAsync(a=>a.Email == email);
                 if (user == null)
                 {
                     return;
@@ -44,7 +49,7 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                var user = await userSvc.GetAllAsync().FirstOrDefaultAsync(a=>a.Email == email) ;
+                var user = await userSvc.GetAll().FirstOrDefaultAsync(a=>a.Email == email) ;
                 if (user == null)
                 {
                     return;
@@ -59,7 +64,7 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                var user = await userSvc.GetAllAsync().FirstOrDefaultAsync(a => a.Email == email);
+                var user = await userSvc.GetAll().FirstOrDefaultAsync(a => a.Email == email);
                 if (user == null)
                 {
                     throw new ArgumentException("邮箱地址不存在");
@@ -79,9 +84,25 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                return await userSvc.GetAllAsync().AnyAsync(a=>a.Email == email && a.Password == password);
+                return await userSvc.GetAll().AnyAsync(a=>a.Email == email && a.Password == password);
             }
         }
 
+        public bool Login(string email, string password,out Guid userId)
+        {
+            using (IDAL.IUserService userSvc = new DAL.UserService())
+            {
+                var user = userSvc.GetAll().FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
+                if (user == null)
+                {
+                    userId = Guid.Empty;
+                    return false;
+                }
+
+                user.Wait();
+                userId = user.Result.Id;
+                return true;
+            }
+        }
     }
 }

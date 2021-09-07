@@ -2,6 +2,7 @@
 using BlogSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,11 @@ namespace BlogSystem.DAL
         {
 
 
+        }
+
+        public async Task<bool> FindUserByEmailAsync(string email)
+        {
+            return await this.db.Users.AnyAsync(a=>a.Email ==  email);
         }
     }
 }

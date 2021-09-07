@@ -44,25 +44,25 @@ namespace BlogSystem.DAL
 
         public async Task<T> FindAsync(Guid id)
         {
-            return await GetAllAsync().FirstAsync(a=>a.Id == id);
+            return await GetAll().FirstAsync(a=>a.Id == id);
         }
         /// <summary>
         /// 返回没有被删除的数据（并没有真的执行Sql语句）
         /// </summary>
         /// <returns></returns>
-        public IQueryable<T> GetAllAsync()
+        public IQueryable<T> GetAll()
         {
             return db.Set<T>().Where(a=>!a.IsRemoved).AsNoTracking();
         }
 
         public IQueryable<T> GetAllByPageAsync(int pageSize = 10, int pageIndex = 0)
         {
-            return GetAllAsync().Skip(pageSize * pageIndex).Take(pageSize);
+            return GetAll().Skip(pageSize * pageIndex).Take(pageSize);
         }
 
         public IQueryable<T> GetAllOrderAsync(bool asc = true)
         {
-            var datas = GetAllAsync();
+            var datas = GetAll();
             return asc ? datas.OrderBy(a=>a.CreateTime) : datas.OrderByDescending(a=>a.CreateTime);
         }
 

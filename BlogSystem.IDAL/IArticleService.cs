@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlogSystem.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace BlogSystem.IDAL
 {
-    public interface IUserService:IBaseService<Models.User>
+    public interface IArticleService : IBaseService<Models.Article>
     {
-        Task<bool> FindUserByEmailAsync(string email);
-
+        
     }
 }

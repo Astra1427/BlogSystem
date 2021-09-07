@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BlogSystem.IDAL
 {
-    public interface IUserService:IBaseService<Models.User>
+    public interface IBlogCategoryService:IBaseService<Models.BlogCategory>
     {
-        Task<bool> FindUserByEmailAsync(string email);
 
     }
 }
