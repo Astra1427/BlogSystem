@@ -87,13 +87,13 @@
                             leftStartIndex -= 3 - rightLimit;
                         }
 
-                        for (int i = leftStartIndex < 0 ? 0 : leftStartIndex; i < ViewBag.PageIndex + 1; i++)
+                        for (int i = leftStartIndex < 1 ? 1 : leftStartIndex; i < ViewBag.PageIndex + 1; i++)
                         {
-                            <li><a href="/article/ListArticle?pageIndex=@(i-1)">@i</a></li>
+                            <li>&nbsp;<a href="/article/ListArticle?pageIndex=@(i-1)">@i</a>&nbsp;</li>
                         }
 
                     }
-                    <li><a href="/article/ListArticle?pageIndex=@ViewBag.PageIndex" style="color:red;">@(ViewBag.PageIndex + 1)</a></li>
+                    <li>&nbsp;<a href="/article/ListArticle?pageIndex=@ViewBag.PageIndex" style="color:red;">@(ViewBag.PageIndex + 1)</a>&nbsp;</li>
 
                     @{
                         //right page number
@@ -103,7 +103,7 @@
                         @*<span>@rightIndexCount</span>*@
                         for (int i = ViewBag.PageIndex+1; i <= rightIndexCount; i++)
                         {
-                            <li><a href="/article/ListArticle?pageIndex=@(i)">@(i+1)</a></li>
+                            <li>&nbsp;<a href="/article/ListArticle?pageIndex=@(i)">@(i+1)</a>&nbsp;</li>
                         }
 
                     }

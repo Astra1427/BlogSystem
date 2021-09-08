@@ -9,6 +9,5 @@ namespace BlogSystem.IBLL
     public interface IArticleToCategoryManager
     {
         Task Create(Guid articleId,Guid categoryId);
-
     }
 }

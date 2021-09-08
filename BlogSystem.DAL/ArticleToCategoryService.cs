@@ -13,5 +13,15 @@ namespace BlogSystem.DAL
         {
 
         }
+
+        public async Task RemoveArticleCategoriesAsync(Guid articleId,bool Save = true)
+        {
+            var removed = this.db.ArticleToCategories.Where(a => a.ArticleId == articleId);
+            db.ArticleToCategories.RemoveRange(removed);
+            if (Save)
+            {
+                await SaveChangesAsync();
+            }
+        }
     }
 }

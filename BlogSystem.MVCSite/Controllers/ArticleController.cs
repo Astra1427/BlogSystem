@@ -48,7 +48,7 @@ namespace BlogSystem.MVCSite.Controllers
         }
 
         [BlogSystemAuthorize]
-        public async Task<ActionResult> ListArticle(int pageIndex=0,int pageSize = 1)
+        public async Task<ActionResult> ListArticle(int pageIndex=0,int pageSize = 3)
         {
             var userId = Guid.Parse(Session["userId"].ToString());
             IBLL.IArticleManager articleManager = new BLL.ArticleManager();
@@ -76,7 +76,7 @@ namespace BlogSystem.MVCSite.Controllers
         }
 
         [BlogSystemAuthorize]
-        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public async Task<ActionResult> CreateArticle(CreateArticleViewModel model)
         {
             if (!ModelState.IsValid)
@@ -102,6 +102,10 @@ namespace BlogSystem.MVCSite.Controllers
                 Content = article.Content,
                 CategoryIds = article.CategoryIds
             };
+            
+            var categories = await articleManager.GetAllCategories(Guid.Parse(Session["userId"].ToString()));
+            ViewBag.Categories = categories;
+
             return View(articleViewModel);
         }
 
@@ -109,12 +113,14 @@ namespace BlogSystem.MVCSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditArticle(EditArticleViewModel model)
         {
+            IBLL.IArticleManager articleManager = new BLL.ArticleManager();
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("","Edit Failed!Please check all data!");
+                var categories = await articleManager.GetAllCategories(Guid.Parse(Session["userId"].ToString()));
+                ViewBag.Categories = categories;
                 return View(model);
             }
-            IBLL.IArticleManager articleManager = new BLL.ArticleManager();
             await articleManager.ChangeArticle(model.ID,model.Title,model.Content,model.CategoryIds);
             return RedirectToAction(nameof(ListArticle));
 
@@ -143,7 +149,36 @@ namespace BlogSystem.MVCSite.Controllers
             return View(articleDto);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> GoodCount(Guid articleId)
+        {
+            IBLL.IArticleManager articleManager = new BLL.ArticleManager();
+            await articleManager.GoodCount(articleId);
+            return Json(new {result="ok" });
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> BadCount(Guid articleId)
+        {
+            IBLL.IArticleManager articleManager = new BLL.ArticleManager();
+            await articleManager.BadCount(articleId);
+            return Json(new { result = "ok" });
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> PublishComment(Guid userId,string content,Guid articleId)
+        {
+            IBLL.ICommentManager commentManager = new BLL.CommentManager();
+            await commentManager.Create(userId,content,articleId);
+            return Json(new {result="ok" });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetComments(Guid articleId)
+        {
+            IBLL.ICommentManager commentManager = new BLL.CommentManager();
+
+            return Json(new {comments= await commentManager.GetComments(articleId) }); 
+        }
     }
 }

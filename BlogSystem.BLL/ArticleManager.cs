@@ -20,10 +20,22 @@ namespace BlogSystem.BLL
                 article.Title = title;
                 article.Content = content;
                 
-
-
                 await artSvc.EditAsync(article);
+                using (IDAL.IArticleToCategoryService atcSvc = new DAL.ArticleToCategoryService())
+                {
+                    await atcSvc.RemoveArticleCategoriesAsync(articleId,false);
+
+                    foreach (var item in categories)
+                    {
+                        await atcSvc.CreateAsync(new Models.ArticleToCategory { 
+                            ArticleId = articleId,
+                            BlogCategoryId = item,
+                        },false);
+                    }
+                    await atcSvc.SaveChangesAsync();
+                }
             }
+
 
         }
 
@@ -156,6 +168,7 @@ namespace BlogSystem.BLL
             using (IDAL.IArticleService articleSvc = new DAL.ArticleService())
             {
                 var articles = await articleSvc.GetArticleByPage(userId,pageIndex,pageSize, asc).Include(a=>a.User).Select(a=>new ArticleDto { 
+                    ID = a.Id,
                     Title = a.Title,
                     Content = a.Content,
                     BadCount = a.BadCount,
@@ -179,6 +192,26 @@ namespace BlogSystem.BLL
             using (IDAL.IArticleService articleSvc = new DAL.ArticleService())
             {
                 return await articleSvc.GetAll().CountAsync(a => a.UserId == userId);
+            }
+        }
+
+        public async Task GoodCount(Guid articleId)
+        {
+            using (IDAL.IArticleService articleSvc = new DAL.ArticleService())
+            {
+                var article = await articleSvc.FindAsync(articleId);
+                article.GoodCount++;
+                await articleSvc.EditAsync(article);
+            }
+        }
+
+        public async Task BadCount(Guid articleId)
+        {
+            using (IDAL.IArticleService articleSvc = new DAL.ArticleService())
+            {
+                var article = await articleSvc.FindAsync(articleId);
+                article.BadCount++;
+                await articleSvc.EditAsync(article);
             }
         }
     }

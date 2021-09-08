@@ -23,7 +23,8 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Content)
+            @*@Html.DisplayFor(model => model.Content)*@
+            @Html.Raw(Model.Content)
         </dd>
 
         <dt>
@@ -85,6 +86,17 @@
 
     </dl>
 </div>
+
+<button onclick="btnGoodClicked(this)">点赞(@Model.GoodCount)</button>
+<button onclick="btnBadClicked(this)">反对(@Model.BadCount)</button>
+
+<textarea id="txtComment" name="txtComment"></textarea>
+<button onclick="btnPublishComment(this)">发表评论</button>
+
+<ul id="listComments">
+    
+</ul>
+
 <p>
     @Html.ActionLink("Edit", "EditArticle", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "ListArticle")
@@ -102,3 +114,79 @@
     </style>
 
 }
+
+
+@section scripts{
+
+    <script>
+        var articleId = '@Model.ID';
+        function btnGoodClicked(sender) {
+            $.ajax({
+                url: "./GoodCount?articleId=" + articleId,
+                type:"post"
+            }).done(() => {
+                sender.innerText = "点赞(@(++Model.GoodCount))";
+            });
+            sender.disabled = true;
+        }
+
+        function btnBadClicked(sender) {
+            $.ajax({
+                url: "./BadCount?articleId="+articleId,
+                type:"post"
+            }).done(() => {
+                sender.innerText = "反对(@(++Model.BadCount))";
+            });
+            sender.disabled = true;
+        }
+        var userId = '@Session["userId"].ToString()';
+        function btnPublishComment(sender) {
+
+            console.log("./PublishComment?userId=" + userId + "&content=" + $("#txtComment").val() + "&articleId=" + articleId);
+            $.ajax({
+                url: "./PublishComment?userId=" + userId + "&content=" + $("#txtComment").val() + "&articleId=" + articleId,
+                type : "post"
+            }).done(() => {
+
+                //load comment
+                LoadComments();
+            });
+        }
+
+        function testClick(sender) {
+            console.log("./PublishComment/" + userId + "/" + $("#txtComment").val() + "/" + articleId);
+
+        }
+
+
+
+        function LoadComments() {
+            var jsonData = $.ajax({
+                url : "./GetComments?articleId=" + articleId,
+                type: "post",
+                success: function (data) {
+                    console.log(data);
+                    console.log(data.comments);
+                    for (var i = 0; i < data.comments.length; i++) {
+                        $("#listComments").append("<li>" + data.comments[i].Content + "</li>");
+                    }
+                }
+            }).fail(() => {
+                alert('评论获取失败！');
+                return;
+            });
+            $("#listComments").html('');
+
+
+            //console.log(comments);
+            //for (var i = 0; i < comments.length; i++) {
+            //    $("#listComments").append("<li>" + comments[i].Content + "</li>");
+            //}
+        }
+
+        $(function () {
+            LoadComments();
+        });
+    </script>
+
+    }

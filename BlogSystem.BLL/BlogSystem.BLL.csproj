@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ArticleManager.cs" />
     <Compile Include="ArticleToCategoryManager.cs" />
+    <Compile Include="CommentManager.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

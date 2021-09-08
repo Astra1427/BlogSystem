@@ -78,7 +78,7 @@ namespace BlogSystem.DAL
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             var t = new T() { Id = id};
-            db.Entry(t).State =  System.Data.Entity.EntityState.Unchanged;
+            db.Entry(t).State = System.Data.Entity.EntityState.Unchanged;
             t.IsRemoved = true;
             if (saved)
             {

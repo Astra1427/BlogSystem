@@ -18,7 +18,8 @@ namespace BlogSystem.IBLL
         Task<List<ArticleDto>> GetArticleByPage(Guid userId,int pageIndex,int pageSize, bool asc = true);
         Task<int> GetArticleCountByUser(Guid userId);
         Task<ArticleDto> GetArticleById(Guid articleId);
-
+        Task GoodCount(Guid articleId);
+        Task BadCount(Guid articleId);
 
     }
 }

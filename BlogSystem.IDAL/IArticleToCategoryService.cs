@@ -8,5 +8,6 @@ namespace BlogSystem.IDAL
 {
     public interface IArticleToCategoryService:IBaseService<Models.ArticleToCategory>
     {
+        Task RemoveArticleCategoriesAsync(Guid articleId, bool Save = true);
     }
 }
